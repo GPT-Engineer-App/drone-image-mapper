@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Container, Text, VStack } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import Modal from "react-modal";
 
 // Custom icon for markers
 const droneIcon = new L.Icon({
@@ -21,6 +23,19 @@ const Index = () => {
     { position: [69.9709, 23.2716], images: ["/images/drone1.jpg", "/images/drone2.jpg", "/images/drone3.jpg"] },
   ];
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const openModal = (image) => {
+    setSelectedImage(image);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedImage("");
+  };
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4}>
@@ -31,13 +46,22 @@ const Index = () => {
             <Marker key={index} position={marker.position} icon={droneIcon}>
               <Popup>
                 {marker.images.map((image, imgIndex) => (
-                  <img key={imgIndex} src={image} alt={`Drone view ${index + 1} - ${imgIndex + 1}`} style={{ width: "100%", marginBottom: "10px" }} />
+                  <img
+                    key={imgIndex}
+                    src={image}
+                    alt={`Drone view ${index + 1} - ${imgIndex + 1}`}
+                    style={{ width: "100%", marginBottom: "10px", cursor: "pointer" }}
+                    onClick={() => openModal(image)}
+                  />
                 ))}
               </Popup>
             </Marker>
           ))}
         </MapContainer>
       </VStack>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Enlarged Image" style={{ content: { display: "flex", justifyContent: "center", alignItems: "center" } }}>
+        <img src={selectedImage} alt="Enlarged view" style={{ maxWidth: "90%", maxHeight: "90%" }} />
+      </Modal>
     </Container>
   );
 };
