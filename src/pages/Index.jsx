@@ -16,9 +16,9 @@ const droneIcon = new L.Icon({
 const Index = () => {
   const center = [69.9689, 23.2716]; // Center of Alta, Norway
   const markers = [
-    { position: [69.9689, 23.2716], image: "/images/drone1.jpg" },
-    { position: [69.9699, 23.2716], image: "/images/drone2.jpg" },
-    { position: [69.9709, 23.2716], image: "/images/drone3.jpg" },
+    { position: [69.9689, 23.2716], images: ["/images/drone1.jpg", "/images/drone2.jpg", "/images/drone3.jpg"] },
+    { position: [69.9699, 23.2716], images: ["/images/drone1.jpg", "/images/drone2.jpg", "/images/drone3.jpg"] },
+    { position: [69.9709, 23.2716], images: ["/images/drone1.jpg", "/images/drone2.jpg", "/images/drone3.jpg"] },
   ];
 
   return (
@@ -30,7 +30,9 @@ const Index = () => {
           {markers.map((marker, index) => (
             <Marker key={index} position={marker.position} icon={droneIcon}>
               <Popup>
-                <img src={marker.image} alt={`Drone view ${index + 1}`} style={{ width: "100%" }} />
+                {marker.images.map((image, imgIndex) => (
+                  <img key={imgIndex} src={image} alt={`Drone view ${index + 1} - ${imgIndex + 1}`} style={{ width: "100%", marginBottom: "10px" }} />
+                ))}
               </Popup>
             </Marker>
           ))}
